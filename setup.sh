@@ -49,7 +49,12 @@ sudo usermod -aG docker vagrant
 echo "[K3d] : installing..."
 wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
 echo "[K3d] : create cluster..."
-k3d cluster create dev-cluster
+su - vagrant -c 'k3d cluster create dev-cluster'
+
+# mkdir -p ~/.kube
+# sudo cp /root/.kube/config /home/vagrant/.kube/
+# chown vagrant:vagrant /home/vagrant/.kube/config
+
 # curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
 # k3d cluster create dev-cluster --port 8888:8888@loadbalancer 8080:80@loadbalancer --port 8443:443@loadbalancer
 # k3d cluster create --config ../config/k3d.yaml
