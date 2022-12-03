@@ -34,27 +34,47 @@ sudo systemctl enable --now node_exporter
 sudo systemctl status node_exporter
 echo "Node exporter has been setup succefully!"
 
+## Install docker
+
+echo "[Docker] : installing..."
+
+apt update && apt install -y git
+curl -sSL https://get.docker.com/ | sh
+
+echo "[Docker] : add user to vagrant group..."
+sudo usermod -aG docker vagrant
+
 ## Install K3d
 
-echo "[K3S] : installing..."
-export INSTALL_K3S_EXEC="--write-kubeconfig-mode=644 --tls-san $(hostname) --node-ip $1  --bind-address=$1 --advertise-address=$1 "
-curl -sfL https://get.k3s.io |  sh -
+echo "[K3d] : installing..."
+wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+echo "[K3d] : create cluster..."
+k3d cluster create dev-cluster
+# curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
+# k3d cluster create dev-cluster --port 8888:8888@loadbalancer 8080:80@loadbalancer --port 8443:443@loadbalancer
+# k3d cluster create --config ../config/k3d.yaml
+# k3d cluster create dev-cluster --port 8080:80@loadbalancer --port 8888:1337@loadbalancer \
+#   --k3s-arg "--disable=traefik@server:0" \
+#   --verbose
 
-echo "[K3S] : Copy master-node-token to (/tmp/token)"
-sudo cp /var/lib/rancher/k3s/server/node-token /mnt/token
+echo "[K3d] : Installing kubectl"
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x kubectl
+mv kubectl /usr/local/bin/
 
-echo "[K3S] : add aliases"
+echo "[K3d] : add aliases"
 echo "alias k='kubectl'" >> /etc/profile.d/00-aliases.sh
 echo "alias kg='kubectl get'" >> /etc/profile.d/00-aliases.sh
 echo "alias kd='kubectl describe'" >> /etc/profile.d/00-aliases.sh
 
-echo "[K3S] : add autofill..."
+echo "[K3d] : add autofill..."
 echo "source <(kubectl completion bash)" >> /etc/profile.d/00-aliases.sh
 
-echo "[machine : $(hostname)] has been setup succefully!"
-
+## Clone k8s yaml code examples from slurm
 
 echo "[Git] : install git..."
-rm -rf /home/vagrant/node_exporter-* && apt update && apt install -y git
+rm -rf /home/vagrant/node_exporter-*
 echo "[Git] : clone learning repository..."
 su - vagrant -c 'git clone https://github.com/codesshaman/slurm_k8s_tasks.git /home/vagrant/slurm'
+
+echo "[machine : $(hostname)] has been setup succefully!"

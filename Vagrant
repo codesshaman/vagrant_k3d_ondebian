@@ -15,6 +15,8 @@ Vagrant.configure(2) do |config|
   # master node config
     config.vm.define 'debian' do |debian|
         debian.vm.hostname = "debian-k3d"
+        debian.vm.provision "shell",
+        privileged: true, path: "setup.sh"
         debian.vm.provider "virtualbox" do |v|
             v.name = "debian_k3d"
             v.memory = 4096
