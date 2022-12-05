@@ -47,9 +47,9 @@ sudo usermod -aG docker vagrant
 ## Install K3d
 
 echo "[K3d] : installing..."
-wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+su - vagrant -c 'wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash'
 echo "[K3d] : create cluster..."
-su - vagrant -c 'k3d cluster create dev-cluster'
+su - vagrant -c "k3d cluster create dev-cluster --servers $1 --agents $2"
 
 # mkdir -p ~/.kube
 # sudo cp /root/.kube/config /home/vagrant/.kube/
