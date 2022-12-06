@@ -25,7 +25,7 @@ echo "[Node Exporter] : creating a system unit..."
     echo 'ExecStart=/usr/bin/node_exporter'; \
     echo '[Install]'; \
     echo 'WantedBy=multi-user.target'; \
-} | tee /etc/systemd/system/node_exporter.service; \
+} | tee /etc/systemd/system/node_exporter.service;
 
 echo "[Node Exporter] : reload daemon..."
 sudo systemctl daemon-reload
