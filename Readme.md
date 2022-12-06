@@ -23,3 +23,9 @@ Copy box and go inside the repository folder:
 Install configuration:
 
 ``vagrant up --provider=virtualbox``
+
+### Step 5
+
+Connect:
+
+``ssh vagrant@192.168.58.100``
