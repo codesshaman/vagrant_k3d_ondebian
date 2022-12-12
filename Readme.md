@@ -18,13 +18,18 @@ Copy box and go inside the repository folder:
 
 ``cd vagrant_k3d_ondebian``
 
-### Step 4
+## Step 4 (for first start only)
+Inicialize configuration:
+
+``vagrant box add bento/debian-11 debian``
+
+### Step 5
 
 Install configuration:
 
 ``vagrant up --provider=virtualbox``
 
-### Step 5
+### Step 6
 
 Connect:
 
